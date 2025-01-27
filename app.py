@@ -45,10 +45,13 @@ def get_rasi_nakshatra_planets(birthdate, birthtime, latitude, longitude, house_
     flag = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
     moon_long, _ = swe.calc_ut(jd, swe.MOON, flag)
     sun_long, _ = swe.calc_ut(jd, swe.SUN, flag)
+    # Check if moon_long is a tuple, if so, extract the first element (longitude)
 
     # Rasi and Nakshatra calculation logic
     rasi_names = ["Mesha", "Vrisha", "Mithuna", "Kataka", "Simha", "Kanya",
                   "Tula", "Vrischika", "Dhanu", "Makara", "Kumbha", "Meena"]
+    if isinstance(moon_long, tuple):
+        moon_long = moon_long[0]  # Explicitly use the first element
 
     rasi_index = int(moon_long // 30) % 12
     rasi = rasi_names[rasi_index]
