@@ -12,6 +12,9 @@ class BirthData(BaseModel):
     house_system: str = 'P'  # Optional: Default to Placidus
 
 app = FastAPI()
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the API!"}
 
 def get_rasi_nakshatra_planets(birthdate, birthtime, latitude, longitude, house_system='P'):
     # The existing code from your function goes here
