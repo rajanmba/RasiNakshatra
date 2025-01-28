@@ -11,6 +11,11 @@ class BirthData(BaseModel):
     longitude: float
     house_system: str = 'P'  # Optional: Default to Placidus
 
+# Define RajjuMatch model
+class NakshatraMatch(BaseModel):
+    boy_nakshatra: str
+    girl_nakshatra: str
+
 app = FastAPI()
 @app.get("/")
 def read_root():
