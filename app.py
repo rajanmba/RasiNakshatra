@@ -79,10 +79,40 @@ def get_rasi_nakshatra_planets(birthdate, birthtime, latitude, longitude, house_
         planet_degrees[planet_name] = planet_long
 
     return {"rasi": rasi, "nakshatra": nakshatra, "pada": pada, "ascendant": ascendant, "planets": planet_degrees}
+# Rajju Matching Logic
+def rajju_match(star_boy, star_girl):
+    rajju_chart = {
+        "Sira - Head": ["Mrigashira", "Chitra", "Dhanishta"],
+        "Kantha - Neck": ["Rohini", "Ardra", "Hasta", "Swati", "Shravana", "Shatabhisha"],
+        "Udara - Stomach": ["Krittika", "Punarvasu", "Uttara", "Vishakha", "Uttarasadha", "Purvabhadrapada"],
+        "Vooru - Thigh": ["Bharani", "Pushya", "Purva", "Anuradha", "Uttabhadrapada", "Purvashadha"],
+        "Paada - Foot": ["Ashwini", "Ashlesha", "Magha", "Jyeshtha", "Mula", "Revati"]
+    }
+    
+    boy_group, girl_group = None, None
 
+    for group, stars in rajju_chart.items():
+        if star_boy in stars:
+            boy_group = group
+        if star_girl in stars:
+            girl_group = group
+
+    if boy_group and girl_group:
+        if boy_group != girl_group:
+            return {"match_result": "Success!", "points": 5, "boy_group": boy_group, "girl_group": girl_group}
+        else:
+            return {"match_result": "No Agreement", "points": 0, "common_group": boy_group}
+    
+    return {"match_result": "Invalid Nakshatra Provided"}
+    
 @app.post("/get_rasi_nakshatra_planets/")
 async def calculate_rasi_nakshatra(data: BirthData):
     results = get_rasi_nakshatra_planets(
         data.dob, data.tob, data.latitude, data.longitude, data.house_system
     )
     return results
+# **Separate** Rajju Match Endpoint
+@app.post("/get_rajju_match/")
+async def calculate_rajju_match(data: NakshatraMatch):
+    match_result = rajju_match(data.boy_nakshatra, data.girl_nakshatra)
+    return match_result
